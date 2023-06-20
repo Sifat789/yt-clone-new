@@ -23,6 +23,10 @@ const HomeVidTem = (props) => {
     {
         return `${Math.round(timedifMins/(60*24*365))} years ago`
     }
+    else if(timedifMins/(60*24)>=30)
+    {
+        return `${Math.round(timedifMins/(60*24*30))} months ago`
+    }
     else if(timedifMins/60 >=24)
     {
         return `${Math.round(timedifMins/(60*24))} days ago`

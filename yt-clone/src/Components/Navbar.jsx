@@ -1,7 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { setSearch } from './SearchSlice'
+import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { setVid, setVidFirst } from './SearchVidSlice'
+import { setInput } from './InputSlice'
+
+
 
 
 const Navbar = () => {
+
+    const input = useSelector(state => state.inputslice)
+    const dispatch = useDispatch()
+
+    const handlesearch = async () => {
+        try {
+            const searchres = await axios({
+                method: 'GET',
+                url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&key=AIzaSyDtPQMIHufVhGSbo6qW30u4pT2QlU2_VY4',
+                params: { q: input }
+            })
+            dispatch(setVidFirst(searchres.data.items))
+            dispatch(setSearch(true))
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handlerefresh = () =>{
+        window.location.reload()
+    }
     return (
         <div className='w-full h-8 mt-2 flex justify-between fixed top-0'>
 
@@ -13,15 +41,15 @@ const Navbar = () => {
                 </button>
 
 
-                <img className='object-contain h-4/5 mr-1' src="./images/yt-logo.png" alt="logo" />
+                <button className='h-4/5' onClick={ () =>( dispatch(setSearch(false)),  dispatch(setVidFirst([])), handlerefresh()) } ><img className=' h-3/5 mr-1' src="./images/yt-logo.png" alt="logo" /></button>
                 <h3 className='font-bold text-xl'>YouTube</h3>
             </div>
 
             {/* search section */}
             <div className='flex w-2/5 justify-between h-full'>
                 <div className='flex border-solid border-black border-2 rounded-full px-3 py-4 items-center container justify-between'>
-                    <input className='outline-none object-contain w-full bg-transparent' placeholder='Search' type="text" name="" id="" />
-                    <button className=''>
+                    <input  onChange={(e) => dispatch(setInput(e.target.value))} className='outline-none object-contain w-full bg-transparent' placeholder='Search' type="text" name="" id="" />
+                    <button onClick={ () => handlesearch() } className=''>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                         </svg>
