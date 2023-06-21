@@ -50,7 +50,7 @@ const SearchVidTem = (props) => {
 
             <h1 className='mt-4 text-sm font-medium text-gray-700 '>{video.channelName}</h1>
 
-            <p className='mt-3 text-gray-700 font-medium font-sans text-sm' >{video.description.substring(0,100)}</p>
+            <p className='mt-3 text-gray-700 font-medium font-sans text-sm' >{`${video.description.substring(0,100)}...`}</p>
         </div>
     </div>
   )

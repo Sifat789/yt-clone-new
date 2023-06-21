@@ -36,7 +36,7 @@ const Home = () => {
 
   }, [])
 
-  console.log('homevideos', homevideos)
+  // console.log('homevideos', homevideos)
 
   const [light, setlight] = useState(false)
   return (

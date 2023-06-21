@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { setSearch } from './SearchSlice'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,22 +12,28 @@ const Navbar = () => {
 
     const input = useSelector(state => state.inputslice)
     const dispatch = useDispatch()
+    const [teminput, setteminput] = useState("")
 
-    const handlesearch = async () => {
-        try {
-            const searchres = await axios({
-                method: 'GET',
-                url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&key=AIzaSyDtPQMIHufVhGSbo6qW30u4pT2QlU2_VY4',
-                params: { q: input }
-            })
-            dispatch(setVidFirst(searchres.data.items))
-            dispatch(setSearch(true))
-        } catch (err) {
-            console.log(err)
+
+    useEffect(() => {
+        const handlesearch = async () => {
+            try {
+                const searchres = await axios({
+                    method: 'GET',
+                    url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&key=AIzaSyAbD3lcpBbN2XpPiqhoNHvJ5mAMtNWZixE',
+                    params: { q: input }
+                })
+                dispatch(setVidFirst(searchres.data.items))
+                
+            } catch (err) {
+                console.log(err)
+            }
         }
-    }
 
-    const handlerefresh = () =>{
+        handlesearch()
+    }, [input])
+
+    const handlerefresh = () => {
         window.location.reload()
     }
     return (
@@ -41,15 +47,17 @@ const Navbar = () => {
                 </button>
 
 
-                <button className='h-4/5' onClick={ () =>( dispatch(setSearch(false)),  dispatch(setVidFirst([])), handlerefresh()) } ><img className=' h-3/5 mr-1' src="./images/yt-logo.png" alt="logo" /></button>
-                <h3 className='font-bold text-xl'>YouTube</h3>
+                <button className='h-4/5 flex items-center' onClick={() => (dispatch(setSearch(false)), dispatch(setVidFirst([])), handlerefresh())} ><img className=' h-3/5 mr-1' src="./images/yt-logo.png" alt="logo" />
+                <h3 className='font-bold text-xl mb-1'>YouTube</h3>
+                </button>
+                
             </div>
 
             {/* search section */}
             <div className='flex w-2/5 justify-between h-full'>
                 <div className='flex border-solid border-black border-2 rounded-full px-3 py-4 items-center container justify-between'>
-                    <input  onChange={(e) => dispatch(setInput(e.target.value))} className='outline-none object-contain w-full bg-transparent' placeholder='Search' type="text" name="" id="" />
-                    <button onClick={ () => handlesearch() } className=''>
+                    <input onChange={(e) => setteminput(e.target.value)} className='outline-none object-contain w-full bg-transparent' placeholder='Search' type="text" name="" id="" />
+                    <button onClick={() => (dispatch(setInput(teminput)), dispatch(setSearch(true)))} className=''>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                         </svg>
