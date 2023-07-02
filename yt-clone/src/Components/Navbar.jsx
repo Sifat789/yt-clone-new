@@ -4,6 +4,8 @@ import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { setVid, setVidFirst } from './SearchVidSlice'
 import { setInput } from './InputSlice'
+import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 
 
@@ -13,6 +15,7 @@ const Navbar = () => {
     const input = useSelector(state => state.inputslice)
     const dispatch = useDispatch()
     const [teminput, setteminput] = useState("")
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -20,11 +23,12 @@ const Navbar = () => {
             try {
                 const searchres = await axios({
                     method: 'GET',
-                    url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&key=AIzaSyAbD3lcpBbN2XpPiqhoNHvJ5mAMtNWZixE',
+                    url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&key=AIzaSyDrWy88a14NL3MJx1UIY_4KXAnu_DnWnng',
                     params: { q: input }
                 })
                 dispatch(setVidFirst(searchres.data.items))
                 
+
             } catch (err) {
                 console.log(err)
             }
@@ -34,6 +38,7 @@ const Navbar = () => {
     }, [input])
 
     const handlerefresh = () => {
+        navigate('/')
         window.location.reload()
     }
     return (
@@ -47,17 +52,19 @@ const Navbar = () => {
                 </button>
 
 
+
                 <button className='h-4/5 flex items-center' onClick={() => (dispatch(setSearch(false)), dispatch(setVidFirst([])), handlerefresh())} ><img className=' h-3/5 mr-1' src="./images/yt-logo.png" alt="logo" />
-                <h3 className='font-bold text-xl mb-1'>YouTube</h3>
+                    <h3 className='font-bold text-xl mb-1'>YouTube</h3>
                 </button>
-                
+
+
             </div>
 
             {/* search section */}
             <div className='flex w-2/5 justify-between h-full'>
                 <div className='flex border-solid border-black border-2 rounded-full px-3 py-4 items-center container justify-between'>
                     <input onChange={(e) => setteminput(e.target.value)} className='outline-none object-contain w-full bg-transparent' placeholder='Search' type="text" name="" id="" />
-                    <button onClick={() => (dispatch(setInput(teminput)), dispatch(setSearch(true)))} className=''>
+                    <button onClick={() => (dispatch(setInput(teminput)), dispatch(setSearch(true)), navigate('/'))} className=''>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                         </svg>

@@ -5,6 +5,7 @@ import SearchSlice from './SearchSlice';
 import SearchVidSlice from './SearchVidSlice';
 import NextPageSliceSearch from './NextPageSliceSearch';
 import InputSlice from './InputSlice';
+import PlayerVidIdSlice from './PlayerVidIdSlice';
 
 const store = configureStore({
     reducer:{
@@ -13,7 +14,8 @@ const store = configureStore({
         searchslice: SearchSlice,
         searchvidslice: SearchVidSlice,
         nextpagesearch: NextPageSliceSearch,
-        inputslice: InputSlice
+        inputslice: InputSlice,
+        playerId: PlayerVidIdSlice
     }
 })
 

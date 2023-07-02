@@ -1,7 +1,13 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { setId } from './PlayerVidIdSlice'
+import { Link } from 'react-router-dom'
 
 const HomeVidTem = (props) => {
   const { video } = props
+  
+  const dispatch = useDispatch()
+  dispatch(setId(video.id))
 
   const handleviews = () => {
     if (video.views > 999 && video.views < 1000000)
@@ -42,6 +48,7 @@ const HomeVidTem = (props) => {
   }
 
   return (
+    <Link to={`/player/${video.id}`}>
     <div>
       <img className='h-52 w-68 rounded-lg' src={video.img} alt="" />
       <div>
@@ -53,6 +60,7 @@ const HomeVidTem = (props) => {
         </div>
       </div>
     </div>
+    </Link>
   )
 }
 

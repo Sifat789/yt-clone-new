@@ -3,19 +3,23 @@ import Navbar from './Components/Navbar'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from './Components/Home'
 import store from './Components/ReduxStore'
-import { Provider } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
+import Player from './Components/Player'
 
 function App() {
 
-
+  const playerid = useSelector(state => state.playerId)
+  console.log(playerid)
 
   return (
     <div>
       <Provider store={store}>
-        <Navbar />
+        
         <Router>
+        <Navbar />
           <Routes>
-            <Route path='/' element={<Home />}></Route>
+            <Route path='/' element={ <Home /> }></Route>
+            <Route path='/player/:id' element={ <Player/> } ></Route>
           </Routes>
         </Router>
       </Provider>

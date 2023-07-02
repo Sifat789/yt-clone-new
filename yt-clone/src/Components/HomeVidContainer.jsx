@@ -21,7 +21,7 @@ const HomeVidContainer = (props) => {
                      loading.current=true //how is this line of code preventing double call of the api simultaneously?
                     const res = await axios({
                         method: 'GET',
-                        url: 'https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=6&regionCode=bd&key=AIzaSyAbD3lcpBbN2XpPiqhoNHvJ5mAMtNWZixE',
+                        url: 'https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=6&regionCode=bd&key=AIzaSyDrWy88a14NL3MJx1UIY_4KXAnu_DnWnng',
                         params: { pageToken: nextPageToken }
                     })
                     if(res.data.items.length<6)

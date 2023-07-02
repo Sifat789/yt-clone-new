@@ -22,7 +22,7 @@ const Home = () => {
       try {
         const res = await axios({
           method: 'GET',
-          url: 'https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=6&regionCode=bd&key=AIzaSyAbD3lcpBbN2XpPiqhoNHvJ5mAMtNWZixE'
+          url: 'https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=6&regionCode=bd&key=AIzaSyDrWy88a14NL3MJx1UIY_4KXAnu_DnWnng'
         })
 
         dispatch(setHomeVidFirst(res.data.items))
