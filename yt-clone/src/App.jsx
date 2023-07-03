@@ -9,7 +9,6 @@ import Player from './Components/Player'
 function App() {
 
   const playerid = useSelector(state => state.playerId)
-  console.log(playerid)
 
   return (
     <div>
