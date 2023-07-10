@@ -1,13 +1,56 @@
 import React from 'react'
 
-const CommentTem = () => {
+const CommentTem = (props) => {
+
+  const  comment  = props.comment
+
+  const handledate = (publishedAt) => {
+    const pastdate = publishedAt;
+    const presentdate = new Date();
+    const timedif = Math.round(presentdate- new Date(pastdate))/1000
+
+    const timedifMins = Math.round(timedif/60)
+    if(timedifMins/(60*24) >=365)
+    {
+        return `${Math.round(timedifMins/(60*24*365))} years ago`
+    }
+    else if(timedifMins/(60*24)>=30)
+    {
+        return `${Math.round(timedifMins/(60*24*30))} months ago`
+    }
+    else if(timedifMins/60 >=24)
+    {
+        return `${Math.round(timedifMins/(60*24))} days ago`
+    }
+    else if(timedifMins>=60)
+    {
+        return `${Math.round(timedifMins/60)} hours ago`
+    }
+    else
+    {
+        return `${Math.round(timedifMins)} minutes ago`
+    }
+  }
+
+  const handlestats = (payload) => {
+    if (payload > 999 && payload < 1000000)
+      return `${(payload / 1000).toFixed(1)}K`
+    else if (payload >= 1000000 && payload < 1000000000)
+      return `${(payload / 1000000).toFixed(1)}M`
+    else if (payload >= 1000000000)
+      return `${(payload / 1000000000).toFixed(1)}B`
+    else return `${payload}`
+  }
+
+  const commentText = comment.actualComment
+
   return (
     <div className='mt-3 flex space-x-4 items-center'>
-      <span className='self-start h-11 w-11 px-5 flex justify-center font-medium text-2xl rounded-full bg-yellow-500 '>s</span>
+      <span className='self-start  flex justify-center font-medium text-2xl rounded-full bg-yellow-500 '><img className='rounded-full' src={comment.profilePic} alt="" /></span>
 
-      <div>
-        <p className='text-xs font-semibold text-gray-600'><span className='text-black font-semibold text-sm mr-2'>@statusworld1637</span>   19 hours ago</p>
-        <p className='font-medium '>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod dolor qui sunt magni minima quaerat facilis possimus doloribus facere quas? Minima magni, ullam maxime accusamus necessitatibus vel odit unde odio.</p>
+      <div className='w-[93%]'>
+        <p className='text-xs font-semibold text-gray-600'><span className='text-black font-semibold text-sm mr-2'>{comment.authorName}</span>   {handledate(comment.publishedAt)}</p>
+        <div dangerouslySetInnerHTML={{ __html: commentText }}></div>
 
         <div className='mt-2'>
           <span className='flex items-center   rounded-full space-x-3'>
@@ -17,7 +60,7 @@ const CommentTem = () => {
               </svg>
 
             </button>
-            <span className='text-xs relative right-3'>100</span>
+            <span className='text-xs relative right-3'>{comment.likes}</span>
 
             <button className=' flex justify-center items-center h-8 w-8 rounded-full hover:bg-gray-200'>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -34,7 +77,7 @@ const CommentTem = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
             </svg>
 
-            <span className='text-sm font-semibold'>10 replies</span>
+            <span className='text-sm font-semibold'>{comment.replies} replies</span>
           </button>
         </div>
       </div>
