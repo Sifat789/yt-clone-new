@@ -36,22 +36,29 @@ const Home = () => {
 
   }, [])
 
-  // console.log('homevideos', homevideos)
-
   const [light, setlight] = useState(false)
   return (
     // main container of Home
-    <div className='flex w-5/5 h-4/5 container mt-16 '>
+    <div className='flex  mt-16 '>
 
       {/* left sidebar */}
-      <div className=' fixed h-full overflow-y-scroll w-1/6'>
+      <div className='hidden sm:block fixed h-full overflow-y-scroll w-1/6'>
         <LeftSideBarHeavy />
       </div>
 
 
+
+
+
+
+
+
+      
+
+
       {
         !isSearching ? (
-          <div className=' h-full fixed left-64 overflow-y-scroll'>
+          <div className=' h-full fixed sm:left-64 overflow-y-scroll'>
 
             {
               homevideos.map((videos, index) => {
@@ -63,7 +70,25 @@ const Home = () => {
             }
 
           </div>
-        ) : (
+        ) :
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        (
           <div className=' h-full w-[81.3%] fixed left-64 overflow-y-scroll'>
             {
               searchVids.map((videos, index) => {

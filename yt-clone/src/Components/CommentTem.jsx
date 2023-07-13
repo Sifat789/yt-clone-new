@@ -46,7 +46,7 @@ const CommentTem = (props) => {
 
   return (
     <div className='mt-3 flex space-x-4 items-center'>
-      <span className='self-start  flex justify-center font-medium text-2xl rounded-full bg-yellow-500 '><img className='rounded-full' src={comment.profilePic} alt="" /></span>
+      <span className='self-start  flex justify-center font-medium text-2xl rounded-full bg-yellow-500 '><img className='rounded-full' src={comment.profilePic? comment.profilePic : comment.authorName[0]} alt="" /></span>
 
       <div className='w-[93%]'>
         <p className='text-xs font-semibold text-gray-600'><span className='text-black font-semibold text-sm mr-2'>{comment.authorName}</span>   {handledate(comment.publishedAt)}</p>

@@ -27,7 +27,7 @@ const Navbar = () => {
                     params: { q: input }
                 })
                 dispatch(setVidFirst(searchres.data.items))
-                
+
 
             } catch (err) {
                 console.log(err)
@@ -40,6 +40,12 @@ const Navbar = () => {
     const handlerefresh = () => {
         navigate('/')
         window.location.reload()
+    }
+
+    const handleSeacrhWhenButtonClicked = () => {
+        dispatch(setInput(teminput)), 
+        dispatch(setSearch(true)), 
+        navigate('/')
     }
     return (
         <div className='w-full h-8 mt-2 flex justify-between fixed top-0'>
@@ -63,8 +69,10 @@ const Navbar = () => {
             {/* search section */}
             <div className='flex w-2/5 justify-between h-full'>
                 <div className='flex border-solid border-black border-2 rounded-full px-3 py-4 items-center container justify-between'>
-                    <input onChange={(e) => setteminput(e.target.value)} className='outline-none object-contain w-full bg-transparent' placeholder='Search' type="text" name="" id="" />
-                    <button onClick={() => (dispatch(setInput(teminput)), dispatch(setSearch(true)), navigate('/'))} className=''>
+                    <input onKeyDown={(e) => {
+                        if(e.target.value!=='') handleSeacrhWhenButtonClicked()
+                    }} onChange={(e) => setteminput(e.target.value)} className='outline-none object-contain w-full bg-transparent' placeholder='Search' type="text" name="" id="" />
+                    <button onClick={handleSeacrhWhenButtonClicked}  className=''>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                         </svg>

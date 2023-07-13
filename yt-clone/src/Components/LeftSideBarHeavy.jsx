@@ -4,7 +4,7 @@ import LeftSideBarOptions from './LeftSideBarOptions'
 const LeftSideBarHeavy = () => {
     return (
         // main sidebar
-        <div className='ml-5  '>
+        <div className='ml-5'>
             {/* first section */}
             <div className='w-full mt- pb-1 space-y-2 border-solid border-b-2 border-gray-200'>
                 <button className='flex space-x-4 py-1 pl-2 rounded-md hover:bg-gray-100 w-full items-center'>

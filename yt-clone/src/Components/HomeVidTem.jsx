@@ -49,12 +49,12 @@ const HomeVidTem = (props) => {
 
   return (
     <Link to={`/player/${video.id}`}>
-    <div>
-      <img className='h-52 w-68 rounded-lg' src={video.img} alt="" />
-      <div>
-        <h1 className='font-semibold ml-6 mt-2'>{video.title}</h1>
-        <h1 className='font-medium ml-6 text-gray-700 mt-1'>{video.channelName}</h1>
-        <div className='flex ml-6 space-x-3'>
+    <div className='my-10 sm:my-0'>
+      <img className='h-56 m-auto max-w-[64%] sm:max-w-[100%] sm:m- rounded-lg sm:w-68' src={video.img} alt="" />
+      <div className='max-w-[50%] m-auto sm:max-w-[85%] sm:m-'>
+        <h1 className='font-bold ml- mt-2 '>{video.title}</h1>
+        <h1 className='font-medium ml-[] text-gray-700 mt-1'>{video.channelName}</h1>
+        <div className='flex ml-[] space-x-3'>
           <h1>{ handleviews() }</h1>
           <h1>{ handledate() }</h1>
         </div>

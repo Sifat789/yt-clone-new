@@ -188,7 +188,7 @@ const Player = () => {
   }
 
   const handleChannelName = (name) => {
-    if(name.length>17) return `${name.slice(0,17)}...`
+    if(name.length>25) return `${name.slice(0,17)}...`
     else return name
   }
 
@@ -212,7 +212,7 @@ const Player = () => {
               <div className='flex w-[45%] justify-between items-center'>
                 <span className='h-11 w-[12.5%] mr-3 flex justify-center  text-3xl font-bold rounded-full bg-green-400'><img className='rounded-full' src={channelInfo? channelInfo.snippet.thumbnails.high.url : ''} alt="" /></span>
                 <div className='relative top-1 w-[60%]'>
-                  <h1 className='text-lg font-semibold '>{videoInfo ? handleChannelName(videoInfo.snippet.channelName)  : ''}</h1>
+                  <h1 className='text-lg font-semibold '>{videoInfo ? handleChannelName(videoInfo.snippet.channelTitle)  : ''}</h1>
                   <small className='relative bottom-2 text-gray-600 font-semibold'>{channelInfo? handlestats(channelInfo.statistics.subscriberCount) : ''} subscribers</small>
                 </div>
                 <button className='bg-gray-300 rounded-full px-4 py-1 flex space-x-2'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -282,7 +282,7 @@ const Player = () => {
 
           {/* comments count, sort by */}
           <div className='flex mt-4 space-x-8 items-center'>
-            <span className='text-xl font-bold'>{videoInfo? videoInfo.statistics.commentCount : ''} Comments</span>
+            <span className='text-xl font-bold'>{videoInfo? handlestats(videoInfo.statistics.commentCount) : ''} Comments</span>
             <span className='flex'>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
@@ -302,8 +302,8 @@ const Player = () => {
           {/* actual comments card */}
           <div className='mt-10'>
             {
-               commentsLoad.map((comment, index) => {
-                if(index+1===commentsLoad.length){
+               comments.map((comment, index) => {
+                if(index+1===comments.length){
                   return <div ref={observeSuggestCom}><CommentTem key={comment.id} comment={comment}/></div>
                 }
                 else return <div><CommentTem key={comment.id} comment={comment}/></div>
