@@ -59,7 +59,7 @@ const Navbar = () => {
 
 
 
-                <button className='h-4/5 flex items-center' onClick={() => (dispatch(setSearch(false)), dispatch(setVidFirst([])), handlerefresh())} ><img className=' h-3/5 mr-1' src="./images/yt-logo.png" alt="logo" />
+                <button className='h-4/5 flex items-center' onClick={() => (dispatch(setSearch(false)), dispatch(setVidFirst([])), handlerefresh())} >
                     <h3 className='font-bold text-xl mb-1'>YouTube</h3>
                 </button>
 
