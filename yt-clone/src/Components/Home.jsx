@@ -16,6 +16,7 @@ const Home = () => {
   const homevideos = useSelector(state => state.HomeVid)
   const isSearching = useSelector(state => state.searchslice)
   const searchVids = useSelector(state => state.searchvidslice)
+  console.log(searchVids)
 
   useEffect(() => {
     const getVideos = async () => {

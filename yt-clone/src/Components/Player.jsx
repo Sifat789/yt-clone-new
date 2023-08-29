@@ -3,6 +3,8 @@ import CommentTem from './CommentTem'
 import { useParams } from 'react-router-dom';
 import axios from 'axios'
 import SuggestVidTem from './SuggestVidTem';
+import { SearchFunction } from '../Functions/SearchFunction';
+import CancelIcon from '../assets/CancelIcon'
 
 const Player = () => {
 
@@ -14,9 +16,10 @@ const Player = () => {
   const [suggestLoad, setsuggestLoad] = useState([])
   const [videoInfo, setvideoInfo] = useState()
   const [channelInfo, setchannelInfo] = useState()
-  const [ seeMore, setseeMore ] = useState(false)
-  const [ comments , setcomments ] = useState([])
-  const [ commentsLoad , setcommentsLoad ] = useState([])
+  const [seeMore, setseeMore] = useState(false)
+  const [comments, setcomments] = useState([])
+  const [commentsLoad, setcommentsLoad] = useState([])
+  const [commentSectionHandler, setcommentSectionHandler] = useState(false)
 
 
   useEffect(() => {
@@ -43,7 +46,7 @@ const Player = () => {
           params: { videoId: res.data.items[0].id }
         })
 
-        console.log('comments',comres.data)
+        console.log('comments', comres.data)
 
         setcomments(comres.data.items.map(item => ({
           authorName: item.snippet.topLevelComment.snippet.authorDisplayName,
@@ -66,16 +69,15 @@ const Player = () => {
     window.location.reload()
   }
 
-  console.log('videoinfo', videoInfo)
-  console.log('channelinfo',channelInfo)
 
   useEffect(() => {
     const getSuggestvid = async () => {
+      if (!videoInfo) return
       try {
         const res = await axios({
           method: 'GET',
-          url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=20&key=AIzaSyBICvf3UNSp2L0qcA46WXfYNoW84Xelm6A ',
-          params: { relatedToVideoId: id }
+          url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&key=AIzaSyBICvf3UNSp2L0qcA46WXfYNoW84Xelm6A',
+          params: { q: `${videoInfo.snippet.tags[4]},${videoInfo.snippet.tags[3]},${videoInfo.snippet.tags[2]},${videoInfo.snippet.tags[1]},${videoInfo.snippet.tags[0]}` }
         })
         console.log(res.data)
         setsuggest(res.data.items.map(item => ({
@@ -92,14 +94,15 @@ const Player = () => {
       }
     }
     getSuggestvid()
-  }, [])
+  }, [videoInfo])
+
 
   useEffect(() => {
     const copiedelement = suggest.slice(0, 5);
     setsuggestLoad(copiedelement)
   }, [suggest])
   useEffect(() => {
-    setcommentsLoad(comments.slice(0,6))
+    setcommentsLoad(comments.slice(0, 6))
   }, [comments])
 
 
@@ -125,10 +128,27 @@ const Player = () => {
     }
   })
 
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && suggest.length !== suggestLoad.length) {
-      let lastindex = suggestLoad.length;
-      setsuggestLoad((prev) => [...prev, ...new Set(suggest.slice(lastindex, lastindex + 4))])
+  const observer = new IntersectionObserver(async (entries) => {
+    if (entries[0].isIntersecting) {
+      try {
+        const res = await axios({
+          method: 'GET',
+          url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&key=AIzaSyBICvf3UNSp2L0qcA46WXfYNoW84Xelm6A',
+          params: { q: `${videoInfo.snippet.tags[4]},${videoInfo.snippet.tags[3]},${videoInfo.snippet.tags[2]},${videoInfo.snippet.tags[1]},${videoInfo.snippet.tags[0]}`, pageToken: nextpage }
+        })
+        console.log(res.data)
+        setsuggest(res.data.items.map(item => ({
+          title: item.snippet.title,
+          img: item.snippet.thumbnails.high.url,
+          channelName: item.snippet.channelTitle,
+          publishedAt: item.snippet.publishedAt,
+          id: item.id,
+          description: item.snippet.description
+        })))
+
+      } catch (err) {
+        console.log(err)
+      }
     }
   })
   const observerCom = new IntersectionObserver((entries) => {
@@ -162,43 +182,47 @@ const Player = () => {
   const handledate = (publishedAt) => {
     const pastdate = publishedAt;
     const presentdate = new Date();
-    const timedif = Math.round(presentdate- new Date(pastdate))/1000
+    const timedif = Math.round(presentdate - new Date(pastdate)) / 1000
 
-    const timedifMins = Math.round(timedif/60)
-    if(timedifMins/(60*24) >=365)
-    {
-        return `${Math.round(timedifMins/(60*24*365))} years ago`
+    const timedifMins = Math.round(timedif / 60)
+    if (timedifMins / (60 * 24) >= 365) {
+      return `${Math.round(timedifMins / (60 * 24 * 365))} years ago`
     }
-    else if(timedifMins/(60*24)>=30)
-    {
-        return `${Math.round(timedifMins/(60*24*30))} months ago`
+    else if (timedifMins / (60 * 24) >= 30) {
+      return `${Math.round(timedifMins / (60 * 24 * 30))} months ago`
     }
-    else if(timedifMins/60 >=24)
-    {
-        return `${Math.round(timedifMins/(60*24))} days ago`
+    else if (timedifMins / 60 >= 24) {
+      return `${Math.round(timedifMins / (60 * 24))} days ago`
     }
-    else if(timedifMins>=60)
-    {
-        return `${Math.round(timedifMins/60)} hours ago`
+    else if (timedifMins >= 60) {
+      return `${Math.round(timedifMins / 60)} hours ago`
     }
-    else
-    {
-        return `${Math.round(timedifMins)} minutes ago`
+    else {
+      return `${Math.round(timedifMins)} minutes ago`
     }
   }
 
   const handleChannelName = (name) => {
-    if(name.length>25) return `${name.slice(0,17)}...`
+    if (name.length > 25) return `${name.slice(0, 17)}...`
     else return name
   }
+
+  console.log(videoInfo)
+
+
+
+
+
+  console.log(window.innerWidth)
+
 
 
 
   return (
-    <div className='w-full h-full mt-16 overflow-y-scroll fixed border-solid border-2 border-blue-500'>
-      <div className='absolute top-0 flex w-full border-solid border-2 border-red-500'>
+    <div className='w-full h-full mt-16 overflow-y-scroll fixed '>
+      <div className='absolute top-0 flex flex-col sm:flex-row w-full '>
         {/* video and comments section */}
-        <div className='w-[66%] border-solid border-2 border-green-500 ml-4'>
+        <div className='sm:w-[66%]  sm:ml-4'>
           {/* <video className='' src="../videos/video.mp4"></video> */}
 
           <div dangerouslySetInnerHTML={{ __html: videoPlayer }} />
@@ -206,14 +230,14 @@ const Player = () => {
 
           {/* channel name, profile pic,video title+ section */}
           <div className='mt-2'>
-            <h1 className='text-lg font-bold'>{videoInfo ? videoInfo.snippet.title : ''}</h1>
+            <h1 className='text-lg font-bold'>{videoInfo ? videoInfo.snippet.title : 'sifat shikder corporation'}</h1>
 
-            <div className='flex w-full justify-between'>
-              <div className='flex w-[45%] justify-between items-center'>
-                <span className='h-11 w-[12.5%] mr-3 flex justify-center  text-3xl font-bold rounded-full bg-green-400'><img className='rounded-full' src={channelInfo? channelInfo.snippet.thumbnails.high.url : ''} alt="" /></span>
-                <div className='relative top-1 w-[60%]'>
-                  <h1 className='text-lg font-semibold '>{videoInfo ? handleChannelName(videoInfo.snippet.channelTitle)  : ''}</h1>
-                  <small className='relative bottom-2 text-gray-600 font-semibold'>{channelInfo? handlestats(channelInfo.statistics.subscriberCount) : ''} subscribers</small>
+            <div className='flex w-full flex-col sm:flex-row  justify-between'>
+              <div className='flex sm:w-[45%] justify-between items-center'>
+                <span className='h-11 w-[12.5%] mr-3 flex justify-center  text-3xl font-bold rounded-full bg-green-400'><img className='rounded-full' src={channelInfo ? channelInfo.snippet.thumbnails.high.url : ''} alt="" /></span>
+                <div className='relative top-1 sm:w-[60%]'>
+                  <h1 className='text-base sm:text-lg font-semibold '>{videoInfo ? handleChannelName(videoInfo.snippet.channelTitle) : 'sifat shikder corporation'}</h1>
+                  <small className='relative bottom-2 text-gray-600 font-semibold'>{channelInfo ? handlestats(channelInfo.statistics.subscriberCount) : '100k'} subscribers</small>
                 </div>
                 <button className='bg-gray-300 rounded-full px-4 py-1 flex space-x-2'><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
@@ -221,7 +245,7 @@ const Player = () => {
                   <span className='font-semibold'>Subscribe</span></button>
               </div>
 
-              <div className='flex items-center justify-between w-[45%] mr-7'>
+              <div className='flex items-center justify-between sm:w-[45%] mr-7'>
                 {/* like dislike button */}
                 <span className='flex bg-gray-300 px-3 py-1 rounded-full space-x-2'>
                   <button className='flex space-x-1'>
@@ -273,16 +297,16 @@ const Player = () => {
 
           {/* discription section */}
           <div className='mt-6 bg-gray-200 rounded-xl py-2 px-1'>
-            <h1>{videoInfo? handlestats(videoInfo.statistics.viewCount) : ''}  {videoInfo? handledate(videoInfo.snippet.publishedAt) : ''}</h1>
+            <h1>{videoInfo ? handlestats(videoInfo.statistics.viewCount) : ''}  {videoInfo ? handledate(videoInfo.snippet.publishedAt) : ''}</h1>
             <button>
-            <div className='text-left' dangerouslySetInnerHTML={{ __html: videoInfo? videoInfo.snippet.description : '' }}></div>
+              <div className='text-left' dangerouslySetInnerHTML={{ __html: videoInfo ? videoInfo.snippet.description : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt ea, natus laboriosam iusto quisquam, eveniet error, impedit eaque iste unde sunt minus tenetur reprehenderit. Nemo magni unde vitae error fugia. Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse sapiente quam error suscipit, placeat quasi amet necessitatibus aliquam inventore vero? Suscipit culpa, eligendi ipsum consequuntur sequi debitis quidem magnam officiis.' }}></div>
             </button>
           </div>
 
 
           {/* comments count, sort by */}
           <div className='flex mt-4 space-x-8 items-center'>
-            <span className='text-xl font-bold'>{videoInfo? handlestats(videoInfo.statistics.commentCount) : ''} Comments</span>
+            <span className='text-xl font-bold'>{videoInfo ? handlestats(videoInfo.statistics.commentCount) : ''} Comments</span>
             <span className='flex'>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
@@ -300,21 +324,48 @@ const Player = () => {
 
 
           {/* actual comments card */}
-          <div className='mt-10'>
+          <button className='relative sm:pointer-events-none' onClick={() => setcommentSectionHandler((prev) => !prev)}>
+
             {
+              (!commentSectionHandler && window.innerWidth < 640) ? (<div className='mt-10 h-[20vh] overflow-hidden bg-gray-200 rounded-md w-[94vw] ml-2 sm:ml-0 sm:w-auto'>
+                {/* {
                comments.map((comment, index) => {
-                if(index+1===comments.length){
-                  return <div ref={observeSuggestCom}><CommentTem key={comment.id} comment={comment}/></div>
-                }
-                else return <div><CommentTem key={comment.id} comment={comment}/></div>
+                 if (index + 1 === comments.length) {
+                   return <div ref={observeSuggestCom}><CommentTem key={comment.id} comment={comment} /></div>
+                 }
+                 else return <div><CommentTem key={comment.id} comment={comment} /></div>
                })
+             } */}
+
+                <CommentTem key={comments[0].id} comment={comments[0]} />
+                <span>See more</span>
+
+              </div>) : (<div className='translate-y-[-250px] transition-transform duration-[250ms] relative top-60'>
+
+                <span className='flex justify-end sm:hidden'><CancelIcon /></span>
+
+                <div className='mt-2 h-[80vh]  sm:h-auto overflow-y-auto  overflow-hidden'>
+
+                  {
+                    comments.map((comment, index) => {
+                      if (index + 1 === comments.length) {
+                        return <div ref={observeSuggestCom}><CommentTem key={comment.id} comment={comment} /></div>
+                      }
+                      else return <div><CommentTem key={comment.id} comment={comment} /></div>
+                    })
+                  }
+                </div></div>)
             }
-          </div>
 
 
 
 
-          <p className='text-transparent'>
+          </button>
+
+
+
+
+          <p className='text-transparent hidden sm:flex'>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi sunt minus quidem facere dolor sequi, ut dicta deserunt cupiditate rem corporis odit, eveniet aperiam provident. Debitis quo aut eius saepe. Lorem ipsum dolor sit amet consectetur adipisicing elit. Error, aperiam.
           </p>
         </div>
@@ -333,15 +384,16 @@ const Player = () => {
 
 
         {/* suggested video section */}
-        <div className='w-[30%] ml-6'>
+        <div className={`sm:w-[30%] mt-10 sm:mt-0 sm:ml-6 ${commentSectionHandler ? 'hidden' : ''}`}>
           {
-            suggestLoad.map((video, index) => {
+            suggest.map((video, index) => {
               if (suggestLoad.length === index + 1) {
                 return <div ref={observeSuggest}><SuggestVidTem key={video.id} video={video} /></div>
               }
               else return <SuggestVidTem key={video.id} video={video} />
             })
           }
+
         </div>
       </div>
     </div>

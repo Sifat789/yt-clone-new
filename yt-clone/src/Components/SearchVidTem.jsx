@@ -28,14 +28,6 @@ const SearchVidTem = (props) => {
     }
   }
 
-  // const handleDescription = () => {
-  //    const des = video.description
-  //    if(des.length>30)
-  //    {
-
-  //    }
-  // }
-
   return (
     <Link to={`/player/${video.id.videoId}`}>
       <div className='h-1/3 w-full container flex  space-x-4 mt-4 justify-between'>

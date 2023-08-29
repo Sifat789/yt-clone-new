@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SearchVidTem from './SearchVidTem'
 import { useDispatch, useSelector } from 'react-redux'
 import { setnextpagesearch } from './NextPageSliceSearch'
 import { useRef, useState, useCallback } from 'react'
 import axios from 'axios'
 import { setVid } from './SearchVidSlice'
+import { SearchFunction } from '../Functions/SearchFunction'
 
 
 const SearchVidContainer = (props) => {
 
     const { videos, islast } = props
-    const nextPageToken = useSelector( state => state.nextpagesearch)
+    const nextPageToken = useSelector(state => state.nextpagesearch)
     const input = useSelector(state => state.inputslice)
     const dispatch = useDispatch()
     const loading = useRef()
@@ -20,11 +21,13 @@ const SearchVidContainer = (props) => {
             observer.disconnect()
             observer.observe(node)
             console.log('node', node)
+
         }
     })
 
     const observer = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
+            console.log('hello')
             if(loading.current===true) return
             const getMoreVid = async () => {
                 try {
@@ -54,7 +57,7 @@ const SearchVidContainer = (props) => {
             {
                 videos.map((video, index) => {
                     if (islast && videos.length === index + 1) {
-                        return <div key={video.id} ref={getNewVideos} ><SearchVidTem video={video} /></div>
+                        return <div ref={getNewVideos} ><SearchVidTem video={video} key={video.id} /></div>
                     }
                     else return <SearchVidTem video={video} key={video.id} />
                 })

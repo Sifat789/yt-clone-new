@@ -45,7 +45,7 @@ const HomeVidContainer = (props) => {
         }
     })
     return (
-        <div className='sm:grid grid-cols-3 grid-rows-2 gap-x-4 gap-y-10 mb-12'>
+        <div className='lg:grid grid-cols-3 grid-rows-2 gap-x-4 gap-y-10 mb-12'>
             {
                 videos.map((video, index) => {
                     if (islast && videos.length === index + 1) {

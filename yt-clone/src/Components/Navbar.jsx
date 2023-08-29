@@ -6,36 +6,40 @@ import { setVid, setVidFirst } from './SearchVidSlice'
 import { setInput } from './InputSlice'
 import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
+import { SearchFunction } from '../Functions/SearchFunction'
 
 
 
 
 const Navbar = () => {
 
-    const input = useSelector(state => state.inputslice)
+    // const input = useSelector(state => state.inputslice)
     const dispatch = useDispatch()
     const [teminput, setteminput] = useState("")
+    const [input, setinput] = useState("")
     const navigate = useNavigate()
 
 
-    useEffect(() => {
-        const handlesearch = async () => {
-            try {
-                const searchres = await axios({
-                    method: 'GET',
-                    url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&key=AIzaSyDrWy88a14NL3MJx1UIY_4KXAnu_DnWnng',
-                    params: { q: input }
-                })
-                dispatch(setVidFirst(searchres.data.items))
+    // useEffect(() => {
+    //     const handlesearch = async () => {
+    //         try {
+    //             const searchres = await axios({
+    //                 method: 'GET',
+    //                 url: 'https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&key=AIzaSyDrWy88a14NL3MJx1UIY_4KXAnu_DnWnng',
+    //                 params: { q: input }
+    //             })
+    //             dispatch(setVidFirst(searchres.data.items))
 
 
-            } catch (err) {
-                console.log(err)
-            }
-        }
+    //         } catch (err) {
+    //             console.log(err)
+    //         }
+    //     }
 
-        handlesearch()
-    }, [input])
+    //     handlesearch()
+    // }, [input])
+
+    SearchFunction(input,'')
 
     const handlerefresh = () => {
         navigate('/')
@@ -43,9 +47,9 @@ const Navbar = () => {
     }
 
     const handleSeacrhWhenButtonClicked = () => {
-        dispatch(setInput(teminput)), 
-        dispatch(setSearch(true)), 
-        navigate('/')
+        dispatch(setInput(teminput)),
+            dispatch(setSearch(true)),
+            navigate('/')
     }
     return (
         <div className='w-full h-8 mt-2 flex justify-between fixed top-0'>
@@ -70,9 +74,9 @@ const Navbar = () => {
             <div className='flex w-2/5 justify-between h-full'>
                 <div className='flex border-solid border-black border-2 rounded-full px-3 py-4 items-center container justify-between'>
                     <input onKeyDown={(e) => {
-                        if(e.target.value!=='') handleSeacrhWhenButtonClicked()
+                        if (e.target.value !== '' && e.key === 'Enter') { handleSeacrhWhenButtonClicked(), setinput(teminput) }
                     }} onChange={(e) => setteminput(e.target.value)} className='outline-none object-contain w-full bg-transparent' placeholder='Search' type="text" name="" id="" />
-                    <button onClick={handleSeacrhWhenButtonClicked}  className=''>
+                    <button onClick={() => { handleSeacrhWhenButtonClicked(), setinput(teminput) }} className=''>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                         </svg>
@@ -90,7 +94,7 @@ const Navbar = () => {
 
 
 
-            <div className='w-1/6 flex justify-evenly items-center'>
+            <div className='w-1/6 sm:flex justify-evenly items-center hidden'>
                 <button>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
                         <path strokeLinecap="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />

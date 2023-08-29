@@ -42,15 +42,17 @@ const CommentTem = (props) => {
     else return `${payload}`
   }
 
-  const commentText = comment.actualComment
+  const commentText = comment? comment.actualComment : 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, eius nam? Explicabo incidunt pariatur repellendus.'
 
   return (
     <div className='mt-3 flex space-x-4 items-center'>
-      <span className='self-start  flex justify-center font-medium text-2xl rounded-full bg-yellow-500 '><img className='rounded-full' src={comment.profilePic? comment.profilePic : comment.authorName[0]} alt="" /></span>
+      <span className='self-start flex justify-center items-center font-medium text-2xl text-white  rounded-full bg-blue-500 '>
+      <img className='rounded-full' src={ comment? comment.profilePic : ''} alt="s" />
+      </span>
 
-      <div className='w-[93%]'>
-        <p className='text-xs font-semibold text-gray-600'><span className='text-black font-semibold text-sm mr-2'>{comment.authorName}</span>   {handledate(comment.publishedAt)}</p>
-        <div dangerouslySetInnerHTML={{ __html: commentText }}></div>
+      <div className='sm:w-[93%]'>
+        <p className='text-xs text-start font-semibold text-gray-600'><span className='text-black font-semibold text-sm mr-2'>{comment ? comment.authorName : 'sifat'}</span>   {comment? handledate(comment.publishedAt) : '21 july'}</p>
+        <div className='text-start' dangerouslySetInnerHTML={{__html: commentText} }></div>
 
         <div className='mt-2'>
           <span className='flex items-center   rounded-full space-x-3'>
@@ -60,7 +62,7 @@ const CommentTem = (props) => {
               </svg>
 
             </button>
-            <span className='text-xs relative right-3'>{comment.likes}</span>
+            <span className='text-xs relative right-3'>{comment ? comment.likes : '54'}</span>
 
             <button className=' flex justify-center items-center h-8 w-8 rounded-full hover:bg-gray-200'>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -77,7 +79,7 @@ const CommentTem = (props) => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
             </svg>
 
-            <span className='text-sm font-semibold'>{comment.replies} replies</span>
+            <span className='text-sm font-semibold'>{comment? comment.replies : '3'} replies</span>
           </button>
         </div>
       </div>

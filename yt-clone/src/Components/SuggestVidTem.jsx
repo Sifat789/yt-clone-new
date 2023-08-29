@@ -28,24 +28,16 @@ const SuggestVidTem = (props) => {
         }
     }
 
-    // const handleDescription = () => {
-    //    const des = video.description
-    //    if(des.length>30)
-    //    {
-
-    //    }
-    // }
-
     return (
-        <Link to={`/player/${video.id.videoId}`}>
-            <div className='w-full container flex items-start  space-x-4 mt-4 justify-between'>
-                <img className='h-28 rounded-lg' src={video.img} alt="" />
+        <Link to={video ? `/player/${video.id.videoId}` : '/player/123'}>
+            <div className='w-full container flex flex-col sm:flex-row sm:items-start items-center  sm:space-x-4 space-y-5 sm:space-y-0 mt-7 sm:mt-4 justify-between'>
+                <img className=' sm:h-28 rounded-lg' src={video ? video.img : `../images/yt-logo.png`} alt="s" />
                 <div className='overflow-hidden h-full w-3/4 '>
-                    <h1 className='font-bold text-sm'>{video.title}</h1>
+                    <h1 className='font-bold text-lg  sm:text-sm'>{video ? video.title : 'Look I have a million dollar'}</h1>
 
-                    <h1 className='text-xs font-medium text-gray-700 '>{video.channelName}</h1>
+                    <h1 className='text-base sm:text-xs font-medium text-gray-700 '>{video ? video.channelName : 'Sifat Shikder'}</h1>
 
-                    <h1 className='text-sm font-medium text-gray-700'>{handledate()}</h1>
+                    <h1 className='text-sm font-medium text-gray-700'>{video ? handledate() : '4 hours ago'}</h1>
 
 
 
